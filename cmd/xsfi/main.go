@@ -65,8 +65,6 @@ func newServerHandler() http.Handler {
 		return nil
 	}))
 
-	routes.PathPrefix("/go/suvin-valmistujaiset").Handler(http.RedirectHandler("https://docs.google.com/document/d/1Fy76fq5bNZa5HL83ignSz8KkOihq7n4YYCnfh6c78Sg/edit", http.StatusFound))
-
 	routes.PathPrefix("/").Handler(http.FileServer(http.FS(staticFilesXSfi)))
 
 	return routes
