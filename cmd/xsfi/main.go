@@ -14,7 +14,6 @@ import (
 	. "github.com/function61/gokit/builtin"
 	"github.com/function61/gokit/net/http/httputils"
 	"github.com/function61/gokit/os/osutil"
-	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 )
 
@@ -57,15 +56,15 @@ func logic(ctx context.Context) error {
 }
 
 func newServerHandler() http.Handler {
-	routes := mux.NewRouter()
+	routes := http.NewServeMux()
 
-	routes.PathPrefix("/9/{id}").HandlerFunc(httputils.WrapWithErrorHandling(func(w http.ResponseWriter, r *http.Request) error {
-		id := mux.Vars(r)["id"]
+	routes.HandleFunc("/9/{id...}", httputils.WrapWithErrorHandling(func(w http.ResponseWriter, r *http.Request) error {
+		id := r.PathValue("id")
 		http.Redirect(w, r, "https://joonas.fi/assets/view?id="+id, http.StatusFound)
 		return nil
 	}))
 
-	routes.PathPrefix("/").Handler(http.FileServer(http.FS(staticFilesXSfi)))
+	routes.Handle("/", http.FileServer(http.FS(staticFilesXSfi)))
 
 	return routes
 }
