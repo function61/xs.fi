@@ -59,6 +59,13 @@ func newServerHandler() http.Handler {
 		return nil
 	}))
 
+	routes.HandleFunc("/a0/lubebar6/{serialNo}", httputils.WrapWithErrorHandling(func(w http.ResponseWriter, r *http.Request) error {
+		// not used yet.
+		// serialNo := r.PathValue("serialNo")
+		http.Redirect(w, r, "https://www.asiakastieto.fi/yritykset/fi/pirkanmaan-metallitekniikka-oy/25144545/yleiskuva", http.StatusFound)
+		return nil
+	}))
+
 	routes.Handle("/", http.FileServer(http.FS(staticFilesXSfi)))
 
 	return routes
