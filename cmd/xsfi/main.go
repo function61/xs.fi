@@ -3,17 +3,14 @@ package main
 import (
 	"context"
 	"embed"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/function61/gokit/app/aws/lambdautils"
 	"github.com/function61/gokit/app/cli"
-	"github.com/function61/gokit/app/dynversion"
 	. "github.com/function61/gokit/builtin"
 	"github.com/function61/gokit/net/http/httputils"
-	"github.com/function61/gokit/os/osutil"
 	"github.com/spf13/cobra"
 )
 
@@ -28,21 +25,19 @@ func main() {
 	}
 
 	app := &cobra.Command{
-		Use:     os.Args[0],
-		Short:   "xs.fi",
-		Version: dynversion.Version,
+		Short: "xs.fi",
 	}
 
 	app.AddCommand(&cobra.Command{
 		Use: "run",
 		// Short: "Reticulates splines",
 		Args: cobra.NoArgs,
-		Run: cli.RunnerNoArgs(func(ctx context.Context, _ *log.Logger) error {
+		Run: cli.WrapRun(func(ctx context.Context, _ []string) error {
 			return logic(ctx)
 		}),
 	})
 
-	osutil.ExitIfError(app.Execute())
+	cli.Execute(app)
 }
 
 func logic(ctx context.Context) error {
